@@ -133,6 +133,18 @@
   @keyframes beat{0%{transform:scale(1.14)}100%{transform:scale(1)}}
   .time.over{font-size:min(20vh,13vw);color:var(--c1)}
 
+  .track{
+    width:min(1100px,92%);
+    height:8px;border-radius:999px;
+    background:var(--line);
+    overflow:hidden;
+  }
+  .fill{
+    height:100%;width:100%;
+    background:var(--now);
+    transform-origin:left;
+    transition:background .3s;
+  }
   .note{
     font-family:"Roboto Flex",sans-serif;
     font-variation-settings:'wdth' 62,'wght' 600;
@@ -200,16 +212,17 @@
         <input id="min" type="number" min="0" max="180" step="1" value="5" inputmode="numeric">
         <span class="unit">분</span>
       </div>
-      <button class="preset" data-m="1">1분</button>
-      <button class="preset" data-m="3">3분</button>
-      <button class="preset" data-m="5" aria-pressed="true">5분</button>
-      <button class="preset" data-m="10">10분</button>
+      <button class="preset" data-m="30">30분</button>
+      <button class="preset" data-m="20">20분</button>
       <button class="preset" data-m="15">15분</button>
+      <button class="preset" data-m="5" aria-pressed="true">5분</button>
+      <button class="preset" data-m="1">1분</button>
     </div>
   </div>
 
   <div class="stage" id="stage">
     <div class="time" id="time">05:00</div>
+    <div class="track"><div class="fill" id="fill"></div></div>
     <p class="note" id="note">Space 로 시작 · 정지</p>
   </div>
 
@@ -223,7 +236,7 @@
 
 <script>
   const $ = id => document.getElementById(id);
-  const timeEl = $('time'), note = $('note'), stage = $('stage');
+  const timeEl = $('time'), fill = $('fill'), note = $('note'), stage = $('stage');
   const btnGo = $('go'), btnReset = $('reset'), minInput = $('min'), flash = $('flash');
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -320,6 +333,7 @@
 
     timeEl.textContent = remain <= 0 ? "TIME'S UP" : solo ? sec : mmss(remain);
     timeEl.className = 'time' + (remain <= 0 ? ' over' : solo ? ' solo' : '');
+    fill.style.transform = `scaleX(${total ? Math.max(0, remain / total) : 0})`;
 
     // 10초 전부터 마젠타 + 비네트, 3초 전부터 흔들림
     const tense = running && sec <= 10 && sec > 0;
