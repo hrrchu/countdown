@@ -164,6 +164,7 @@
     cursor:pointer;transition:background .16s,color .16s;
   }
   button.main:hover{background:var(--c3);border-color:var(--c3);color:var(--c1)}
+  button.main.alt:not(:hover){color:var(--ink)}   /* 일시정지 · 이어서 = 검정 글자 */
   button.ghost{
     font-family:"Roboto Flex","Pretendard",sans-serif;
     font-variation-settings:'wdth' 100,'wght' 800;
@@ -365,7 +366,7 @@
     if (remain <= 0) remain = total;
     endAt = performance.now() + remain;
     running = true; tensed = false; lastSec = -1;
-    btnGo.textContent = '일시정지';
+    btnGo.textContent = '일시정지'; btnGo.classList.add('alt');
     note.textContent = 'Running';
     sfx.start();
     loop();
@@ -376,7 +377,7 @@
     cancelAnimationFrame(raf);
     remain = Math.max(0, endAt - performance.now());
     running = false;
-    btnGo.textContent = '이어서';
+    btnGo.textContent = '이어서'; btnGo.classList.add('alt');
     note.textContent = 'Paused';
     document.body.classList.remove('tense');
     stage.classList.remove('shake');
@@ -387,7 +388,7 @@
   function finish(){
     cancelAnimationFrame(raf);
     running = false; remain = 0;
-    btnGo.textContent = '시작';
+    btnGo.textContent = '시작'; btnGo.classList.remove('alt');
     note.textContent = "Time's up";
     document.body.classList.remove('tense');
     stage.classList.remove('shake');
@@ -407,7 +408,7 @@
     document.documentElement.style.setProperty('--on', c1 === '#FFD530' ? 'var(--ink)' : 'var(--paper)');   // 노랑 위 글씨만 검정
     cancelAnimationFrame(raf);
     running = false; remain = total; lastSec = -1; tensed = false;
-    btnGo.textContent = '시작';
+    btnGo.textContent = '시작'; btnGo.classList.remove('alt');
     note.textContent = 'Space 로 시작 · 정지';
     document.body.classList.remove('tense');
     stage.classList.remove('shake');
