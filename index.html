@@ -21,7 +21,7 @@
     --paper:#FFFFFF;
     --mute:#231F20B3;
     --line:#231F2029;
-    --c1:#69B3E3;
+    --c1:#FFD530;
     --c3:#231F20;
     --now:var(--c1);
     color-scheme:light;
@@ -74,7 +74,7 @@
     margin:.12em 0 0;
     white-space:nowrap;
   }
-  h1 em{font-style:normal;color:var(--c1)}
+  h1 em{font-style:normal;color:var(--ink)}
 
   /* ── 입력 ── */
   .setup{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:8px}
@@ -160,7 +160,7 @@
     font-size:20px;letter-spacing:.02em;
     padding:clamp(9px,1.6vh,15px) clamp(26px,3.4vw,44px);
     border-radius:999px;
-    border:1.5px solid var(--c1);background:var(--c1);color:var(--ink);
+    border:1.5px solid var(--c1);background:var(--c1);color:var(--on,var(--paper));
     cursor:pointer;transition:background .16s,color .16s;
   }
   button.main:hover{background:var(--c3);border-color:var(--c3);color:var(--c1)}
@@ -212,10 +212,11 @@
         <input id="min" type="number" min="0" max="180" step="1" value="5" inputmode="numeric">
         <span class="unit">분</span>
       </div>
-      <button class="preset" data-m="30">30분</button>
       <button class="preset" data-m="20">20분</button>
-      <button class="preset" data-m="15">15분</button>
+      <button class="preset" data-m="10">10분</button>
+      <button class="preset" data-m="7">7분</button>
       <button class="preset" data-m="5" aria-pressed="true">5분</button>
+      <button class="preset" data-m="3">3분</button>
       <button class="preset" data-m="1">1분</button>
     </div>
   </div>
@@ -396,8 +397,14 @@
     flash.classList.remove('go'); void flash.offsetWidth; flash.classList.add('go');
   }
 
+  // 포인트 컬러 — 입력 분이 이 값 이상이면 해당 색 (사이 값은 아래 단계 색)
+  const COLOR = [[20,'#9A7AD6'],[10,'#69B3E3'],[7,'#39B54A'],[5,'#FFD530'],[3,'#F58A45'],[0,'#F1729E']];
+
   function setMinutes(m){
     total = Math.max(0, Math.min(180, m)) * 60000;
+    const c1 = COLOR.find(([t]) => total >= t * 60000)[1];
+    document.documentElement.style.setProperty('--c1', c1);
+    document.documentElement.style.setProperty('--on', c1 === '#FFD530' ? 'var(--ink)' : 'var(--paper)');   // 노랑 위 글씨만 검정
     cancelAnimationFrame(raf);
     running = false; remain = total; lastSec = -1; tensed = false;
     btnGo.textContent = '시작';
