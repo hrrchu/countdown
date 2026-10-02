@@ -160,11 +160,10 @@
     font-size:20px;letter-spacing:.02em;
     padding:clamp(9px,1.6vh,15px) clamp(26px,3.4vw,44px);
     border-radius:999px;
-    border:1.5px solid var(--c1);background:var(--c1);color:var(--on,var(--paper));
+    border:1.5px solid var(--c1);background:var(--c1);color:var(--ink);
     cursor:pointer;transition:background .16s,color .16s;
   }
   button.main:hover{background:var(--c3);border-color:var(--c3);color:var(--c1)}
-  button.main.alt:not(:hover){color:var(--ink)}   /* 일시정지 · 이어서 = 검정 글자 */
   button.ghost{
     font-family:"Roboto Flex","Pretendard",sans-serif;
     font-variation-settings:'wdth' 100,'wght' 800;
@@ -366,7 +365,7 @@
     if (remain <= 0) remain = total;
     endAt = performance.now() + remain;
     running = true; tensed = false; lastSec = -1;
-    btnGo.textContent = '일시정지'; btnGo.classList.add('alt');
+    btnGo.textContent = '일시정지';
     note.textContent = 'Running';
     sfx.start();
     loop();
@@ -377,7 +376,7 @@
     cancelAnimationFrame(raf);
     remain = Math.max(0, endAt - performance.now());
     running = false;
-    btnGo.textContent = '이어서'; btnGo.classList.add('alt');
+    btnGo.textContent = '이어서';
     note.textContent = 'Paused';
     document.body.classList.remove('tense');
     stage.classList.remove('shake');
@@ -388,7 +387,7 @@
   function finish(){
     cancelAnimationFrame(raf);
     running = false; remain = 0;
-    btnGo.textContent = '시작'; btnGo.classList.remove('alt');
+    btnGo.textContent = '시작';
     note.textContent = "Time's up";
     document.body.classList.remove('tense');
     stage.classList.remove('shake');
@@ -403,12 +402,10 @@
 
   function setMinutes(m){
     total = Math.max(0, Math.min(180, m)) * 60000;
-    const c1 = COLOR.find(([t]) => total >= t * 60000)[1];
-    document.documentElement.style.setProperty('--c1', c1);
-    document.documentElement.style.setProperty('--on', c1 === '#FFD530' ? 'var(--ink)' : 'var(--paper)');   // 노랑 위 글씨만 검정
+    document.documentElement.style.setProperty('--c1', COLOR.find(([t]) => total >= t * 60000)[1]);
     cancelAnimationFrame(raf);
     running = false; remain = total; lastSec = -1; tensed = false;
-    btnGo.textContent = '시작'; btnGo.classList.remove('alt');
+    btnGo.textContent = '시작';
     note.textContent = 'Space 로 시작 · 정지';
     document.body.classList.remove('tense');
     stage.classList.remove('shake');
